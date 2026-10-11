@@ -1,0 +1,134 @@
+{
+  "last_updated": "2026-10-11T20:00:00.000000+00:00",
+  "target_retirement_pot": 600000.0,
+  "target_retirement_age": 57,
+  "target_allocations": {
+    "equities_pct": 60.0,
+    "equities_target_gbp": 360000.0,
+    "defensive_pct": 40.0,
+    "defensive_target_gbp": 240000.0
+  },
+  "accounts": [
+    {
+      "id": "workplace_pension",
+      "name": "Primary Workplace Pension",
+      "provider": "Workplace Pension Provider",
+      "wrapper": "Workplace Pension",
+      "value": 110000.0,
+      "invested": 110000.0,
+      "cash": 0.0,
+      "cash_interest_rate_pct": 0.0,
+      "daily_interest_gbp": 0.0,
+      "monthly_contribution_gbp": 1200.0,
+      "monthly_contribution_fund": "Global Developed Equity Index Fund",
+      "sweep_schedule": "Annual rebalance",
+      "sweep_destination": "Self-Invested Personal Pension",
+      "notes": "Active workplace pension pot receiving regular monthly contributions."
+    },
+    {
+      "id": "personal_sipp",
+      "name": "Personal SIPP Portfolio",
+      "provider": "Investment Platform",
+      "wrapper": "SIPP",
+      "value": 85000.0,
+      "invested": 65000.0,
+      "cash": 20000.0,
+      "cash_interest_rate_pct": 4.5,
+      "daily_interest_gbp": 2.47,
+      "notes": "Low-cost index tracker SIPP with diversified global equity funds and cash buffer."
+    },
+    {
+      "id": "stocks_isa",
+      "name": "Stocks & Shares ISA",
+      "provider": "ISA Provider",
+      "wrapper": "Stocks & Shares ISA",
+      "value": 55000.0,
+      "invested": 45000.0,
+      "cash": 10000.0,
+      "cash_interest_rate_pct": 4.5,
+      "daily_interest_gbp": 1.23,
+      "notes": "Tax-free ISA wrapper invested in all-world equities and defensive yield buffer."
+    }
+  ],
+  "holdings": [
+    {
+      "ticker": "ALL_WORLD",
+      "name": "Global All-Cap UCITS ETF (Acc)",
+      "isin": "IE00BK5BQT80",
+      "category": "Global Equity",
+      "accounts": [
+        "Primary Workplace Pension",
+        "Personal SIPP Portfolio",
+        "Stocks & Shares ISA"
+      ],
+      "shares": 1050.0,
+      "cost_per_share": 140.0,
+      "cost_basis": 147000.0,
+      "latest_price": 150.0,
+      "current_value": 157500.0,
+      "weight_pct": 63.0,
+      "role": "Core Global Equity Engine"
+    },
+    {
+      "ticker": "SP500_ETF",
+      "name": "S&P 500 Core UCITS ETF (Acc)",
+      "isin": "IE00BYML9W36",
+      "category": "US Equity",
+      "accounts": [
+        "Personal SIPP Portfolio",
+        "Stocks & Shares ISA"
+      ],
+      "shares": 850.0,
+      "cost_per_share": 65.0,
+      "cost_basis": 55250.0,
+      "latest_price": 73.53,
+      "current_value": 62500.0,
+      "weight_pct": 25.0,
+      "role": "US Large-Cap Growth"
+    },
+    {
+      "ticker": "CASH_BUFFER",
+      "name": "Platform Cash & Liquidity Buffer",
+      "isin": "GBP_CASH",
+      "category": "Cash Buffer",
+      "accounts": [
+        "Personal SIPP Portfolio",
+        "Stocks & Shares ISA"
+      ],
+      "shares": 30000.0,
+      "cost_per_share": 1.0,
+      "cost_basis": 30000.0,
+      "latest_price": 1.0,
+      "current_value": 30000.0,
+      "weight_pct": 12.0,
+      "role": "Risk-Free Safe Buffer (Yielding 4.5% AER)"
+    }
+  ],
+  "contributions": {
+    "monthly_inflow_gbp": 1200.0,
+    "annual_inflow_gbp": 14400.0,
+    "target_investment": "Global Equity Index Trackers"
+  },
+  "category_totals": {
+    "Global Equity": 157500.0,
+    "US Equity": 62500.0,
+    "Cash Buffer": 30000.0
+  },
+  "totals": {
+    "total_net_worth": 250000.0,
+    "total_cost_basis": 232250.0,
+    "total_equities_gbp": 220000.0,
+    "equities_pct_of_total": 88.0,
+    "total_safe_buffer_gbp": 30000.0,
+    "safe_buffer_pct_of_total": 12.0,
+    "total_cash_gbp": 30000.0,
+    "daily_interest_gbp": 3.7,
+    "total_pensions_gbp": 195000.0,
+    "total_isas_gbp": 55000.0,
+    "pensions_pct": 78.0,
+    "isas_pct": 22.0,
+    "progress_to_target_pct": 41.67,
+    "gap_to_target_gbp": 350000.0,
+    "unrealised_gain_gbp": 17750.0
+  }
+}
