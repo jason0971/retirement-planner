@@ -197,14 +197,97 @@
       cursor: not-allowed;
     }
 
-    /* Navigation Tabs */
+    /* Navigation Tabs & Scroll Controls */
+    .tabs-nav-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+    .tabs-scroll-btn {
+      position: absolute;
+      top: 42%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+      opacity: 0.95;
+    }
+    .tabs-scroll-btn:hover {
+      background: #3b82f6;
+      color: #fff;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 16px rgba(59, 130, 246, 0.6);
+    }
+    .tabs-scroll-btn.left {
+      left: 0;
+    }
+    .tabs-scroll-btn.right {
+      right: 0;
+    }
+    body.light-theme .tabs-scroll-btn {
+      background: #ffffff;
+      border-color: #93c5fd;
+      color: #2563eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    body.light-theme .tabs-scroll-btn:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+
     .tabs-nav {
       display: flex;
       gap: 8px;
       border-bottom: 1px solid var(--card-border);
-      margin-bottom: 24px;
-      overflow-x: auto;
-      padding-bottom: 4px;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+      width: 100%;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 rgba(255, 255, 255, 0.08);
+      -webkit-overflow-scrolling: touch;
+    }
+    .tabs-nav::-webkit-scrollbar {
+      height: 8px;
+    }
+    .tabs-nav::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      margin: 0 4px;
+    }
+    .tabs-nav::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+    }
+    .tabs-nav::-webkit-scrollbar-thumb:hover {
+      background: #60a5fa;
+      box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+    }
+    body.light-theme .tabs-nav {
+      scrollbar-color: #2563eb rgba(0, 0, 0, 0.08);
+    }
+    body.light-theme .tabs-nav::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.06);
+    }
+    body.light-theme .tabs-nav::-webkit-scrollbar-thumb {
+      background: #2563eb;
     }
     .tab-btn {
       background: none;
@@ -1049,16 +1132,20 @@
       </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('overview')">📊 Headline & Valuations</button>
-      <button class="tab-btn" onclick="switchTab('holdings')">📈 Performance & Holdings</button>
-      <button class="tab-btn" onclick="switchTab('bridge')">⏳ Retirement Bridge (57 ➔ 67)</button>
-      <button class="tab-btn" onclick="switchTab('playbook')">📜 Tax & Drawdown Playbook</button>
-      <button class="tab-btn" onclick="switchTab('advice')">💡 Investment Advice & Stress Tests</button>
-      <button class="tab-btn" onclick="switchTab('simulator')" id="tab-btn-simulator">🔮 Life Simulator to 85</button>
-      <button class="tab-btn" onclick="switchTab('tracker')" id="tab-btn-tracker">📑 Pension Tracker (Interactive Decumulation Model)</button>
-    </nav>
+    <!-- Navigation Tabs Wrapper with Scroll Controls -->
+    <div class="tabs-nav-wrapper">
+      <button class="tabs-scroll-btn left" id="tabs-scroll-left" onclick="scrollTabs(-240)" title="Scroll tabs left">‹</button>
+      <nav class="tabs-nav" id="main-tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('overview')">📊 Headline & Valuations</button>
+        <button class="tab-btn" onclick="switchTab('holdings')">📈 Performance & Holdings</button>
+        <button class="tab-btn" onclick="switchTab('bridge')">⏳ Retirement Bridge (57 ➔ 67)</button>
+        <button class="tab-btn" onclick="switchTab('playbook')">📜 Tax & Drawdown Playbook</button>
+        <button class="tab-btn" onclick="switchTab('advice')">💡 Investment Advice & Stress Tests</button>
+        <button class="tab-btn" onclick="switchTab('simulator')" id="tab-btn-simulator">🔮 Life Simulator to 85</button>
+        <button class="tab-btn" onclick="switchTab('tracker')" id="tab-btn-tracker">📑 Pension Tracker (Interactive Decumulation Model)</button>
+      </nav>
+      <button class="tabs-scroll-btn right" id="tabs-scroll-right" onclick="scrollTabs(240)" title="Scroll tabs right">›</button>
+    </div>
 
     <!-- TAB 1: HEADLINE & VALUATIONS -->
     <div id="tab-overview" class="tab-pane active">
@@ -2658,6 +2745,7 @@
       updateLifeSimulator();
       initTrackerChart();
       updatePensionTracker();
+      initTabsScroll();
     }
 
     function toggleTheme() {
@@ -2903,6 +2991,36 @@
       renderHoldingsTable();
     }
 
+    function scrollTabs(amount) {
+      const nav = document.getElementById('main-tabs-nav');
+      if (nav) nav.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    function updateTabsScrollButtons() {
+      const nav = document.getElementById('main-tabs-nav');
+      const btnLeft = document.getElementById('tabs-scroll-left');
+      const btnRight = document.getElementById('tabs-scroll-right');
+      if (!nav || !btnLeft || !btnRight) return;
+
+      const hasOverflow = nav.scrollWidth > nav.clientWidth + 4;
+      if (!hasOverflow) {
+        btnLeft.style.display = 'none';
+        btnRight.style.display = 'none';
+        return;
+      }
+
+      btnLeft.style.display = nav.scrollLeft > 10 ? 'flex' : 'none';
+      btnRight.style.display = (nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 10) ? 'flex' : 'none';
+    }
+
+    function initTabsScroll() {
+      const nav = document.getElementById('main-tabs-nav');
+      if (!nav) return;
+      nav.addEventListener('scroll', updateTabsScrollButtons);
+      window.addEventListener('resize', updateTabsScrollButtons);
+      setTimeout(updateTabsScrollButtons, 150);
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -2913,8 +3031,13 @@
       const tabs = ['overview', 'holdings', 'bridge', 'playbook', 'advice', 'simulator', 'tracker'];
       const idx = tabs.indexOf(tabId);
       if (idx !== -1) {
-        document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+        const btns = document.querySelectorAll('.tab-btn');
+        if (btns[idx]) {
+          btns[idx].classList.add('active');
+          btns[idx].scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+        }
       }
+      setTimeout(updateTabsScrollButtons, 200);
 
       if (tabId === 'bridge') {
         setTimeout(updateSimulation, 50);
