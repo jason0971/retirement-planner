@@ -1187,6 +1187,118 @@
       color: #1d4ed8;
     }
 
+    /* Tab 8: Investment Resources Cards & Grid */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .resource-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .resource-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    body.light-theme .resource-card {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    body.light-theme .resource-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+    }
+    .resource-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .resource-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-youtube {
+      background: rgba(239, 68, 68, 0.18);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .badge-portal {
+      background: rgba(59, 130, 246, 0.18);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+    .badge-tool {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .badge-fire {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .resource-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    body.light-theme .resource-title {
+      color: #0f172a;
+    }
+    .resource-handle {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+    }
+    .resource-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 14px;
+      flex-grow: 1;
+    }
+    .resource-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+    .resource-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
     /* Print Stylesheet */
     @media print {
       body {
@@ -1265,6 +1377,7 @@
         <button class="tab-btn" onclick="switchTab('advice')">💡 Investment Advice & Stress Tests</button>
         <button class="tab-btn" onclick="switchTab('simulator')" id="tab-btn-simulator">🔮 Life Simulator to 85</button>
         <button class="tab-btn" onclick="switchTab('tracker')" id="tab-btn-tracker">📑 Pension Tracker (Interactive Decumulation Model)</button>
+        <button class="tab-btn" onclick="switchTab('resources')" id="tab-btn-resources">📚 Investment Resources</button>
       </nav>
       <button class="tabs-scroll-btn right" id="tabs-scroll-right" onclick="scrollTabs(240)" title="Scroll tabs right">›</button>
     </div>
@@ -2709,6 +2822,502 @@
         </div>
       </div>
     </div>
+
+    <!-- TAB 8: INVESTMENT & RETIREMENT RESOURCES -->
+    <div id="tab-resources" class="tab-pane">
+      <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
+            <span>📚 Investment & Retirement Resources</span>
+            <span class="badge" id="resource-count-badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);">
+              18 Curated Links
+            </span>
+          </h2>
+          <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px;">
+            Essential YouTube channels, broker direct logins, UK pension drawdown calculators, tax tools, and financial independence reading.
+          </p>
+        </div>
+      </div>
+
+      <!-- Filter Bar & Real-Time Search -->
+      <div class="card" style="padding: 14px 18px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <!-- Category Filter Pills -->
+          <div class="quick-filter-bar">
+            <button class="quick-filter-btn active resource-filter-btn" data-cat="all" onclick="filterResources('all')">
+              🌐 All Resources (18)
+            </button>
+            <button class="quick-filter-btn resource-filter-btn" data-cat="youtube" onclick="filterResources('youtube')">
+              🔴 YouTube Channels (7)
+            </button>
+            <button class="quick-filter-btn resource-filter-btn" data-cat="portal" onclick="filterResources('portal')">
+              💼 Broker Portals (4)
+            </button>
+            <button class="quick-filter-btn resource-filter-btn" data-cat="tools" onclick="filterResources('tools')">
+              🧮 Tools & Tax (5)
+            </button>
+            <button class="quick-filter-btn resource-filter-btn" data-cat="fire" onclick="filterResources('fire')">
+              📖 Reading & FIRE (2)
+            </button>
+          </div>
+
+          <!-- Instant Search Box -->
+          <div style="flex: 1; min-width: 260px; max-width: 400px; position: relative;">
+            <input 
+              type="text" 
+              id="resource-search-input" 
+              placeholder="🔍 Search channels, tools, brokers, topics..." 
+              oninput="searchResources()" 
+              style="width: 100%; padding: 8px 12px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; color: #fff; font-size: 0.82rem; outline: none;"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources Cards Grid -->
+      <div class="resource-grid" id="resource-cards-grid">
+        <!-- 1. James Shack -->
+        <div class="resource-card" data-category="youtube" data-title="James Shack" data-keywords="chartered financial planner drawdown ufpls sipp isa sequencing cashflow state pension tax">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@JamesShack</span>
+            </div>
+            <div class="resource-title">James Shack</div>
+            <div class="resource-handle">youtube.com/@JamesShack</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Chartered Financial Planner</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">UFPLS & Drawdown</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Tax Traps & Bridges</span>
+            </div>
+            <p class="resource-desc">
+              UK Chartered Financial Planner delivering masterclasses on pension drawdown architectures, SIPP vs ISA withdrawal ordering, avoiding the 40%/60% tax traps, and bridging early retirement to the State Pension.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@JamesShack" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 2. Pensioncraft -->
+        <div class="resource-card" data-category="youtube" data-title="PensionCraft (Ramin Nakisa)" data-keywords="ramin nakisa quant asset allocation global etfs bond ladders risk management sequence of returns">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@Pensioncraft</span>
+            </div>
+            <div class="resource-title">PensionCraft (Ramin Nakisa)</div>
+            <div class="resource-handle">youtube.com/@Pensioncraft</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Quant Asset Allocation</span>
+              <span class="pill pill-regional" style="font-size:0.65rem;">Global ETFs</span>
+              <span class="pill pill-defence" style="font-size:0.65rem;">Bond Ladders</span>
+            </div>
+            <p class="resource-desc">
+              Former investment banking quant researcher Ramin Nakisa provides deep mathematical breakdowns of global equity indices, bond ladder mechanics, portfolio rebalancing, and sequence-of-returns risk modeling.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@Pensioncraft" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 3. Chris Palmer -->
+        <div class="resource-card" data-category="youtube" data-title="Chris Palmer" data-keywords="chris palmer uk early retirement isa portfolio fire living dividend growth safe withdrawal">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@chrispalmer24</span>
+            </div>
+            <div class="resource-title">Chris Palmer</div>
+            <div class="resource-handle">youtube.com/@chrispalmer24</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-isa" style="font-size:0.65rem;">UK Early Retirement</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">ISA Cashflow</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">Real Living Expenses</span>
+            </div>
+            <p class="resource-desc">
+              Transparent, real-world documentation of retiring early in the UK. Covers living off ISA and SIPP portfolios, practical monthly living budgets, dividend income, and honest realities of early retirement.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@chrispalmer24" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 4. Mark Tilbury -->
+        <div class="resource-card" data-category="youtube" data-title="Mark Tilbury" data-keywords="mark tilbury wealth mindset passive income investing basics compound interest compounding">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@marktilbury</span>
+            </div>
+            <div class="resource-title">Mark Tilbury</div>
+            <div class="resource-handle">youtube.com/@marktilbury</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Wealth Mindset</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Passive Income</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Compounding Laws</span>
+            </div>
+            <p class="resource-desc">
+              UK entrepreneur and self-made multi-millionaire sharing accessible lessons on compound growth momentum, index fund investing principles, multiple income streams, and wealth preservation habits.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@marktilbury" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 5. Making Money Podcast -->
+        <div class="resource-card" data-category="youtube" data-title="Making Money Podcast" data-keywords="making money podcast investing macroeconomics expert interviews market trends uk wealth">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@MakingMoneyPodcast</span>
+            </div>
+            <div class="resource-title">Making Money Podcast</div>
+            <div class="resource-handle">youtube.com/@MakingMoneyPodcast</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Investing Podcast</span>
+              <span class="pill pill-regional" style="font-size:0.65rem;">Macroeconomics</span>
+              <span class="pill pill-defence" style="font-size:0.65rem;">Fund Managers</span>
+            </div>
+            <p class="resource-desc">
+              In-depth discussions and interviews with leading financial minds, fund managers, and wealth creators analyzing macroeconomic trends, inflation cycles, global equities, and portfolio tactics.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@MakingMoneyPodcast" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 6. Dianne Sullivan -->
+        <div class="resource-card" data-category="youtube" data-title="Dianne Sullivan" data-keywords="dianne sullivan budgeting frugal living household finance retirement savings smart money">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@DianneSullivan</span>
+            </div>
+            <div class="resource-title">Dianne Sullivan</div>
+            <div class="resource-handle">youtube.com/@DianneSullivan</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-cash" style="font-size:0.65rem;">Smart Budgeting</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Frugal Living</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">Lifestyle Optimization</span>
+            </div>
+            <p class="resource-desc">
+              Everyday personal finance and disciplined budgeting strategies focusing on practical lifestyle optimisation, managing recurring expenditures, and maximizing savings margins for retirement.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@DianneSullivan" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 7. Nolan Gouveia -->
+        <div class="resource-card" data-category="youtube" data-title="Nolan Gouveia" data-keywords="nolan gouveia uk investing index funds stocks shares isa financial independence fire">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-youtube">🔴 YouTube</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">@NolanGouveia</span>
+            </div>
+            <div class="resource-title">Nolan Gouveia</div>
+            <div class="resource-handle">youtube.com/@NolanGouveia</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">UK Index Investing</span>
+              <span class="pill pill-isa" style="font-size:0.65rem;">ISA Allowances</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Financial Freedom</span>
+            </div>
+            <p class="resource-desc">
+              Clear, practical UK investing tutorials on low-cost global equity index trackers, utilizing tax-advantaged ISA wrappers, and building a straightforward roadmap to financial independence.
+            </p>
+          </div>
+          <a href="https://www.youtube.com/@NolanGouveia" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open YouTube Channel ↗
+          </a>
+        </div>
+
+        <!-- 8. Fidelity PlanViewer -->
+        <div class="resource-card" data-category="portal" data-title="Fidelity PlanViewer" data-keywords="fidelity planviewer login portal workplace sipp dormant scheme fund allocation statements">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-portal">💼 Broker Portal</span>
+              <span style="font-size: 0.72rem; color: #60a5fa; font-weight: 600;">Fidelity SIPP</span>
+            </div>
+            <div class="resource-title">Fidelity PlanViewer</div>
+            <div class="resource-handle">planviewer.fidelity.co.uk</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Direct Login</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">Workplace Scheme Pot</span>
+              <span class="pill pill-defence" style="font-size:0.65rem;">Valuation Statements</span>
+            </div>
+            <p class="resource-desc">
+              Direct member login for your dormant workplace pension pot. Review scheme fund choices, download official statements, update beneficiaries, and check your latest portfolio valuation.
+            </p>
+          </div>
+          <a href="https://www.planviewer.fidelity.co.uk/newlogin/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Log in to Fidelity PlanViewer ↗
+          </a>
+        </div>
+
+        <!-- 9. Aviva MyAccount Login -->
+        <div class="resource-card" data-category="portal" data-title="Aviva MyAccount" data-keywords="aviva myaccount login workplace pension monthly inflow sweep blackrock sterling liquidity">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-portal">💼 Broker Portal</span>
+              <span style="font-size: 0.72rem; color: #60a5fa; font-weight: 600;">Aviva Pension</span>
+            </div>
+            <div class="resource-title">Aviva MyAccount</div>
+            <div class="resource-handle">direct.aviva.co.uk</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-workplace" style="font-size:0.65rem;">Direct Login</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Monthly Contributions</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Bi-Annual Sweeps</span>
+            </div>
+            <p class="resource-desc">
+              Official member portal for your active workplace pension scheme. Track monthly employer and employee contributions, monitor Sterling Liquidity cash, and coordinate bi-annual transfer sweeps.
+            </p>
+          </div>
+          <a href="https://www.direct.aviva.co.uk/MyAccount/Login" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Log in to Aviva MyAccount ↗
+          </a>
+        </div>
+
+        <!-- 10. Trading 212 Web App -->
+        <div class="resource-card" data-category="portal" data-title="Trading 212" data-keywords="trading 212 web app login sipp isa cash yield fwrg vwrp rebalancing trading212">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-portal">💼 Broker Portal</span>
+              <span style="font-size: 0.72rem; color: #60a5fa; font-weight: 600;">Primary SIPP & ISAs</span>
+            </div>
+            <div class="resource-title">Trading 212 Web App</div>
+            <div class="resource-handle">app.trading212.com</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Trading 212 SIPP</span>
+              <span class="pill pill-isa" style="font-size:0.65rem;">Stocks & Shares ISA</span>
+              <span class="pill pill-cash" style="font-size:0.65rem;">4.5% AER Cash Yield</span>
+            </div>
+            <p class="resource-desc">
+              Primary trading flight deck. Access your SIPP and ISA accounts, track daily 4.5% AER cash interest accrual, execute ETF purchases (FWRG, VWRP, SPXL), and rebalance portfolio allocations.
+            </p>
+          </div>
+          <a href="https://app.trading212.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Launch Trading 212 App ↗
+          </a>
+        </div>
+
+        <!-- 11. InvestEngine Portal -->
+        <div class="resource-card" data-category="portal" data-title="InvestEngine" data-keywords="investengine login isa sipp low cost etfs 0% diy fee automated portfolios">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-portal">💼 Broker Portal</span>
+              <span style="font-size: 0.72rem; color: #60a5fa; font-weight: 600;">InvestEngine ISA & SIPP</span>
+            </div>
+            <div class="resource-title">InvestEngine Portal</div>
+            <div class="resource-handle">investengine.com</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-isa" style="font-size:0.65rem;">Shares ISA</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">InvestEngine SIPP</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">0% DIY Platform Fee</span>
+            </div>
+            <p class="resource-desc">
+              Low-cost UK ETF investment platform hosting your index tracker portfolios. Log in to monitor automated ETF investing, portfolio weights, and fee-free dividend reinvestment.
+            </p>
+          </div>
+          <a href="https://investengine.com/create-account/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open InvestEngine Portal ↗
+          </a>
+        </div>
+
+        <!-- 12. James Shack Retirement Tools -->
+        <div class="resource-card" data-category="tools" data-title="James Shack Retirement Tools" data-keywords="james shack retirement tools drawdown modeling cashflow forecasts software simulators">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-tool">🧮 Modeling Tool</span>
+              <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">Retirement Software</span>
+            </div>
+            <div class="resource-title">James Shack Retirement Tools</div>
+            <div class="resource-handle">james-shack.co.uk/retirement-tools</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Cashflow Modeler</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Drawdown Planner</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Longevity Testing</span>
+            </div>
+            <p class="resource-desc">
+              Interactive retirement calculators and cashflow planning software designed by James Shack to simulate multi-decade drawdown sequences, tax optimization, and safe capital runway.
+            </p>
+          </div>
+          <a href="https://james-shack.co.uk/retirement-tools" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open Retirement Tools ↗
+          </a>
+        </div>
+
+        <!-- 13. MoneyHelper UK -->
+        <div class="resource-card" data-category="tools" data-title="MoneyHelper UK (Pensions & Retirement)" data-keywords="moneyhelper maps pension wise state pension forecast statutory guidance hmrc rules">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-tool">🏛️ Official UK</span>
+              <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">Statutory Service</span>
+            </div>
+            <div class="resource-title">MoneyHelper UK (Pensions)</div>
+            <div class="resource-handle">moneyhelper.org.uk</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-income" style="font-size:0.65rem;">Government Backed</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">State Pension Rules</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Pension Wise Guidance</span>
+            </div>
+            <p class="resource-desc">
+              Free, impartial UK government-backed service (Money & Pensions Service). Check State Pension entitlement, understand UFPLS rules, explore flexible drawdown, and access statutory pension guidance.
+            </p>
+          </div>
+          <a href="https://www.moneyhelper.org.uk/en/pensions-and-retirement" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Visit MoneyHelper UK ↗
+          </a>
+        </div>
+
+        <!-- 14. Listen To Taxman -->
+        <div class="resource-card" data-category="tools" data-title="Listen To Taxman" data-keywords="listen to taxman hmrc income tax calculator personal allowance salary sacrifice 20 percent basic rate">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-tool">🧮 Tax Calculator</span>
+              <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">HMRC Calculator</span>
+            </div>
+            <div class="resource-title">Listen To Taxman</div>
+            <div class="resource-handle">listentotaxman.com</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">UK Income Tax</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Personal Allowance</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Take-Home Pay</span>
+            </div>
+            <p class="resource-desc">
+              The UK's benchmark income tax and National Insurance calculator. Crucial for verifying gross pension drawdowns needed to hit target net take-home pay under UK marginal tax brackets.
+            </p>
+          </div>
+          <a href="https://listentotaxman.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open Tax Calculator ↗
+          </a>
+        </div>
+
+        <!-- 15. Financial A-Ha! Templates -->
+        <div class="resource-card" data-category="tools" data-title="Financial A-Ha! Retirement Spreadsheets" data-keywords="financial aha spreadsheets excel retirement templates drawdown ledgers financial planning">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-tool">📑 Excel Models</span>
+              <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">Spreadsheets</span>
+            </div>
+            <div class="resource-title">Financial A-Ha! Spreadsheets</div>
+            <div class="resource-handle">financialaha.com</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">Retirement Spreadsheets</span>
+              <span class="pill pill-sipp" style="font-size:0.65rem;">Drawdown Ledgers</span>
+              <span class="pill pill-defence" style="font-size:0.65rem;">Excel Templates</span>
+            </div>
+            <p class="resource-desc">
+              Professional retirement planning and decumulation spreadsheet models. Offers year-by-year cashflow tracking, compounding calculations, and multi-scenario return sensitivity analysis.
+            </p>
+          </div>
+          <a href="https://www.financialaha.com/spreadsheet-templates/retirement/retirement-financial-planning-projections/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Browse Excel Templates ↗
+          </a>
+        </div>
+
+        <!-- 16. Google Finance -->
+        <div class="resource-card" data-category="tools" data-title="Google Finance UK" data-keywords="google finance live market quotes lse ftse all world s&p 500 gbp usd exchange rate">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-tool">📈 Market Quotes</span>
+              <span style="font-size: 0.72rem; color: #34d399; font-weight: 600;">Real-Time Feeds</span>
+            </div>
+            <div class="resource-title">Google Finance UK</div>
+            <div class="resource-handle">google.com/finance</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-regional" style="font-size:0.65rem;">LSE Stock Quotes</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">Global Indices</span>
+              <span class="pill pill-cash" style="font-size:0.65rem;">GBP / USD Currency</span>
+            </div>
+            <p class="resource-desc">
+              Live stock market quotes, London Stock Exchange pricing for your ETFs (FWRG, VWRP, SPXL, SGLN), macro benchmark indices, and real-time currency exchange rates.
+            </p>
+          </div>
+          <a href="https://www.google.com/finance/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Open Google Finance ↗
+          </a>
+        </div>
+
+        <!-- 17. Mr. Money Mustache -->
+        <div class="resource-card" data-category="fire" data-title="Mr. Money Mustache" data-keywords="mr money mustache fire movement early retirement simple math frugal independence freedom">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-fire">📖 FIRE Movement</span>
+              <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 600;">Early Retirement</span>
+            </div>
+            <div class="resource-title">Mr. Money Mustache</div>
+            <div class="resource-handle">mrmoneymustache.com</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-income" style="font-size:0.65rem;">The Simple Math of FIRE</span>
+              <span class="pill pill-global" style="font-size:0.65rem;">Frugal Freedom</span>
+              <span class="pill pill-isa" style="font-size:0.65rem;">Anti-Consumerism</span>
+            </div>
+            <p class="resource-desc">
+              The foundational blog of the modern Financial Independence / Retire Early movement. Masterful essays including "The Shockingly Simple Math Behind Early Retirement" and frugal living philosophy.
+            </p>
+          </div>
+          <a href="https://www.mrmoneymustache.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Read Mr. Money Mustache ↗
+          </a>
+        </div>
+
+        <!-- 18. The Motley Fool UK -->
+        <div class="resource-card" data-category="fire" data-title="The Motley Fool UK" data-keywords="motley fool uk share analysis ftse dividend stocks market commentary investing ideas">
+          <div>
+            <div class="resource-card-top">
+              <span class="resource-icon-badge badge-fire">📖 Stocks & Dividends</span>
+              <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 600;">UK Market Research</span>
+            </div>
+            <div class="resource-title">The Motley Fool UK</div>
+            <div class="resource-handle">fool.co.uk</div>
+            <div class="resource-tag-row">
+              <span class="pill pill-global" style="font-size:0.65rem;">FTSE Shares</span>
+              <span class="pill pill-income" style="font-size:0.65rem;">Dividend Growth</span>
+              <span class="pill pill-regional" style="font-size:0.65rem;">Stock Research</span>
+            </div>
+            <p class="resource-desc">
+              Long-running UK equity research and commentary covering FTSE 100 dividend aristocrats, growth shares, investment trusts, and long-term equity investing ideas.
+            </p>
+          </div>
+          <a href="https://www.fool.co.uk/" target="_blank" rel="noopener noreferrer" class="btn btn-primary resource-btn">
+            Visit The Motley Fool UK ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Fallback No-Match Card -->
+      <div id="resource-no-match" class="card" style="display: none; text-align: center; padding: 40px 20px; margin-top: 20px;">
+        <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+        <h4 style="font-size: 1.1rem; font-weight: 700; color: #fff;">No resources found</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+          Try clearing your search query or switching to 'All Resources'.
+        </p>
+        <button class="btn btn-primary" style="margin-top: 14px;" onclick="document.getElementById('resource-search-input').value = ''; filterResources('all');">
+          Reset Filter & Search
+        </button>
+      </div>
+
+      <!-- Resource Strategy Callout -->
+      <div class="card" style="margin-top: 24px; border-left: 4px solid #3b82f6;">
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+          <span>💡 Financial Guidance & Content Consumption Strategy</span>
+        </h4>
+        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+          <p style="margin-bottom: 6px;">
+            <strong>Cross-Verifying Tax Mechanics:</strong> When watching UK personal finance content, always cross-reference withdrawal concepts against statutory rules at <a href="https://www.moneyhelper.org.uk/en/pensions-and-retirement" target="_blank" style="color: #60a5fa;">MoneyHelper</a> and <a href="https://listentotaxman.com/" target="_blank" style="color: #60a5fa;">Listen To Taxman</a>. Pension rules, allowances, and tax bands evolve across UK Budgets.
+          </p>
+          <p>
+            <strong>Direct Portal Security:</strong> Bookmark the official broker logins above (<a href="https://www.planviewer.fidelity.co.uk/newlogin/" target="_blank" style="color: #60a5fa;">Fidelity</a>, <a href="https://www.direct.aviva.co.uk/MyAccount/Login" target="_blank" style="color: #60a5fa;">Aviva</a>, <a href="https://app.trading212.com/" target="_blank" style="color: #60a5fa;">Trading 212</a>, and <a href="https://investengine.com/create-account/" target="_blank" style="color: #60a5fa;">InvestEngine</a>) to ensure you always access your pension and ISA engines via direct, secure HTTPS portals.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="toast-container" class="toast-container"></div>
@@ -2895,6 +3504,7 @@
       initTrackerChart();
       updatePensionTracker();
       initTabsScroll();
+      searchResources();
     }
 
     function toggleTheme() {
@@ -3177,7 +3787,7 @@
       const pane = document.getElementById('tab-' + tabId);
       if (pane) pane.classList.add('active');
 
-      const tabs = ['overview', 'holdings', 'bridge', 'playbook', 'advice', 'simulator', 'tracker'];
+      const tabs = ['overview', 'holdings', 'bridge', 'playbook', 'advice', 'simulator', 'tracker', 'resources'];
       const idx = tabs.indexOf(tabId);
       if (idx !== -1) {
         const btns = document.querySelectorAll('.tab-btn');
@@ -4918,6 +5528,53 @@
       toast.innerHTML = '📥 <strong>CSV Exported:</strong> Complete JW Pension Tracker projection downloaded successfully.';
       document.getElementById('toast-container').appendChild(toast);
       setTimeout(() => toast.remove(), 4000);
+    }
+
+    // --- Tab 8: Investment Resources Filter & Search Engine ---
+    let currentResourceFilter = 'all';
+
+    function filterResources(category) {
+      currentResourceFilter = category;
+      document.querySelectorAll('.resource-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === category) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      searchResources();
+    }
+
+    function searchResources() {
+      const query = (document.getElementById('resource-search-input')?.value || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.resource-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category') || '';
+        const cardTitle = (card.getAttribute('data-title') || '').toLowerCase();
+        const cardKeywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+        const cardText = card.innerText.toLowerCase();
+
+        const matchesCat = (currentResourceFilter === 'all' || cardCat === currentResourceFilter);
+        const matchesQuery = (!query || cardTitle.includes(query) || cardKeywords.includes(query) || cardText.includes(query));
+
+        if (matchesCat && matchesQuery) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const noMatch = document.getElementById('resource-no-match');
+      if (noMatch) {
+        noMatch.style.display = (visibleCount === 0) ? 'block' : 'none';
+      }
+      const countBadge = document.getElementById('resource-count-badge');
+      if (countBadge) {
+        countBadge.innerText = `${visibleCount} Resources`;
+      }
     }
 
     async function triggerAutomationRefresh() {
