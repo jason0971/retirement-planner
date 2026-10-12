@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
   <style>
     :root {
       --bg: #090d16;
@@ -860,6 +861,19 @@
       border-radius: 8px;
       padding: 8px 12px;
       border: 1px solid var(--card-border);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .milestone-item:hover {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    body.light-theme .milestone-item:hover {
+      background: #eff6ff;
+      border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
     .milestone-age {
       font-size: 0.75rem;
@@ -882,6 +896,114 @@
       font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
+    }
+
+    /* Interactive Chart Zoom Toolbar Styles */
+    .chart-zoom-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+    }
+    body.light-theme .chart-zoom-toolbar {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .chart-zoom-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .zoom-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-right: 2px;
+    }
+    body.light-theme .zoom-label {
+      color: #0284c7;
+    }
+    .zoom-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .zoom-chip:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .zoom-chip.active {
+      background: rgba(59, 130, 246, 0.25);
+      border-color: #3b82f6;
+      color: #60a5fa;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    .zoom-chip.zoom-reset-btn {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.3);
+      color: #f87171;
+    }
+    .zoom-chip.zoom-reset-btn:hover {
+      background: rgba(244, 63, 94, 0.25);
+      color: #fff;
+    }
+    body.light-theme .zoom-chip {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+    body.light-theme .zoom-chip:hover {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      color: #1d4ed8;
+    }
+    body.light-theme .zoom-chip.active {
+      background: #dbeafe;
+      border-color: #2563eb;
+      color: #1d4ed8;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+    }
+    body.light-theme .zoom-chip.zoom-reset-btn {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+    .chart-zoom-hints {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    #tracker-zoom-status {
+      color: #38bdf8;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    body.light-theme #tracker-zoom-status {
+      color: #0284c7;
     }
 
     /* Two-Speed Step-Down Drawdown Widget Styles */
@@ -2379,16 +2501,17 @@
 
         <!-- Trajectory Chart Card -->
         <div class="card" style="display: flex; flex-direction: column;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
             <div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: #fff;">
-                📈 4-Scenario Compounding Curves (Ages 53 to 85)
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                <span>📈 4-Scenario Compounding Curves (Ages 53 to 85)</span>
+                <span class="pill pill-global" style="font-size: 0.68rem;">Interactive Zoom & Pan</span>
               </h3>
               <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
                 Visualizing the 3%, 5%, 7%, and 10% curves and the bridge U-Dip before State Pension activation
               </p>
             </div>
-            <div style="display: flex; gap: 6px; font-size: 0.72rem;">
+            <div style="display: flex; gap: 6px; font-size: 0.72rem; align-items: center;">
               <span style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #f43f5e;"></span> 3% Cons</span>
               <span style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #06b6d4;"></span> 5% Bal</span>
               <span style="display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #10b981;"></span> 7% Growth</span>
@@ -2396,34 +2519,57 @@
             </div>
           </div>
 
-          <div style="position: relative; flex: 1; min-height: 380px;">
+          <!-- Interactive Zoom & Inspection Toolbar -->
+          <div class="chart-zoom-toolbar">
+            <div class="chart-zoom-group">
+              <span class="zoom-label">🔍 Zoom Range:</span>
+              <button class="zoom-chip active" id="btn-zoom-all" onclick="setTrackerZoom('all')" title="View full 33-year lifecycle from age 53 to 85">All Ages (53–85)</button>
+              <button class="zoom-chip" id="btn-zoom-bridge" onclick="setTrackerZoom('bridge')" title="Focus on critical 17-year retirement transition and U-Dip trough (Ages 53 to 70)">🔍 U-Dip Focus (53–70)</button>
+              <button class="zoom-chip" id="btn-zoom-post" onclick="setTrackerZoom('post67')" title="Focus on post-State Pension decumulation longevity">Post-67 Era (67–85)</button>
+            </div>
+
+            <div class="chart-zoom-group">
+              <span class="zoom-label">📏 Scale & Detail:</span>
+              <button class="zoom-chip" id="btn-zoom-cap" onclick="toggleTrackerYCap()" title="Cap vertical scale at £2.5M to eliminate the £12M stretch and enlarge 3% and 5% curves by 500%">Core Focus (Cap £2.5M)</button>
+              <button class="zoom-chip active" id="btn-toggle-10pct" onclick="toggleTracker10PctCurve()" title="Toggle visibility of the 10% Aggressive curve to auto-rescale Y-axis">👁️ 10% Curve</button>
+              <button class="zoom-chip" id="btn-zoom-log" onclick="toggleTrackerLogScale()" title="Toggle logarithmic scale to view all curves without squashing">📐 Log Scale</button>
+              <button class="zoom-chip zoom-reset-btn" id="btn-zoom-reset" onclick="resetTrackerZoom()" title="Reset to full view">↺ Reset Zoom</button>
+            </div>
+          </div>
+
+          <div class="chart-zoom-hints">
+            <span>💡 <strong>Interactive:</strong> Click presets above, drag a box on chart to zoom, scroll/pinch to magnify, or click any milestone card below.</span>
+            <span id="tracker-zoom-status">Full Horizon (Ages 53–85)</span>
+          </div>
+
+          <div style="position: relative; flex: 1; min-height: 400px;">
             <canvas id="trackerChart"></canvas>
           </div>
 
-          <!-- U-Dip Milestone Indicators Strip -->
+          <!-- U-Dip Milestone Indicators Strip (Clickable to Zoom) -->
           <div class="milestone-strip">
-            <div class="milestone-item">
-              <div class="milestone-age">Age 53 (Oct 2027)</div>
+            <div class="milestone-item" onclick="zoomToMilestone(53, 60)" title="Click to zoom into accumulation phase (Age 53 to 60)">
+              <div class="milestone-age">Age 53 (Oct 2027) 🔍</div>
               <div class="milestone-val" id="ms-tr-53">£250,000</div>
               <div class="milestone-note">+£2,563/mo savings</div>
             </div>
-            <div class="milestone-item">
-              <div class="milestone-age">Age 57 (1 June 2031)</div>
+            <div class="milestone-item" onclick="zoomToMilestone(55, 63)" title="Click to zoom into start of retirement (Age 55 to 63)">
+              <div class="milestone-age">Age 57 (1 June 2031) 🔍</div>
               <div class="milestone-val" id="ms-tr-57" style="color: #60a5fa;">£876,047</div>
               <div class="milestone-note">Drawdown begins (£3,750/mo)</div>
             </div>
-            <div class="milestone-item">
-              <div class="milestone-age">Age 67 (SP Activates)</div>
+            <div class="milestone-item" onclick="zoomToMilestone(63, 72)" title="Click to zoom into the 5% U-Dip trough & State Pension start (Age 63 to 72)">
+              <div class="milestone-age">Age 67 (SP Activates) 🔍</div>
               <div class="milestone-val" id="ms-tr-67" style="color: #34d399;">£781,385</div>
               <div class="milestone-note">5% U-Dip Trough (Recovers)</div>
             </div>
-            <div class="milestone-item">
-              <div class="milestone-age">Age 70 (Self-Sustaining)</div>
+            <div class="milestone-item" onclick="zoomToMilestone(67, 75)" title="Click to zoom into self-sustaining recovery (Age 67 to 75)">
+              <div class="milestone-age">Age 70 (Self-Sustaining) 🔍</div>
               <div class="milestone-val" id="ms-tr-70" style="color: #c084fc;">£878,422</div>
               <div class="milestone-note">SP offsets 100%+ draw</div>
             </div>
-            <div class="milestone-item">
-              <div class="milestone-age">Age 85 (Horizon)</div>
+            <div class="milestone-item" onclick="zoomToMilestone(75, 85)" title="Click to zoom into later-life terminal capital (Age 75 to 85)">
+              <div class="milestone-age">Age 85 (Horizon) 🔍</div>
               <div class="milestone-val" id="ms-tr-85" style="color: #fbbf24;">£3,510,000+</div>
               <div class="milestone-note">Terminal Capital (5% Bal)</div>
             </div>
@@ -3951,6 +4097,159 @@
       updatePensionTracker();
     }
 
+    // Interactive Zoom & Detail Inspection State for Pension Tracker Chart
+    let trackerChartZoomRange = 'all'; // 'all', 'bridge' (53-70), 'post67' (67-85), or 'custom'
+    let trackerYCapEnabled = false;    // Cap Y at £2.5M
+    let tracker10PctVisible = true;    // Hide/show 10% curve
+    let trackerLogScale = false;       // Linear vs Logarithmic scale
+    let trackerCustomMinAge = null;
+    let trackerCustomMaxAge = null;
+
+    function applyTrackerActiveZoom() {
+      if (!trackerChartInstance) return;
+
+      // 1. Determine X-axis bounds (indexes into labels array, 0 = Age 53, 32 = Age 85)
+      let minIdx = 0;
+      let maxIdx = 32;
+
+      if (trackerChartZoomRange === 'bridge') {
+        // Ages 53 to 70: index 0 to 17
+        minIdx = 0;
+        maxIdx = 17;
+      } else if (trackerChartZoomRange === 'post67') {
+        // Ages 67 to 85: index 14 to 32
+        minIdx = 14;
+        maxIdx = 32;
+      } else if (trackerChartZoomRange === 'custom' && trackerCustomMinAge !== null && trackerCustomMaxAge !== null) {
+        minIdx = Math.max(0, Math.min(32, trackerCustomMinAge - 53));
+        maxIdx = Math.max(0, Math.min(32, trackerCustomMaxAge - 53));
+        if (minIdx >= maxIdx) {
+          maxIdx = Math.min(32, minIdx + 3);
+        }
+      }
+
+      if (trackerChartZoomRange === 'all') {
+        delete trackerChartInstance.options.scales.x.min;
+        delete trackerChartInstance.options.scales.x.max;
+      } else {
+        trackerChartInstance.options.scales.x.min = minIdx;
+        trackerChartInstance.options.scales.x.max = maxIdx;
+      }
+
+      // 2. Y-axis configuration: Logarithmic vs Linear
+      if (trackerLogScale) {
+        trackerChartInstance.options.scales.y.type = 'logarithmic';
+        trackerChartInstance.options.scales.y.min = 100000;
+        if (trackerYCapEnabled) {
+          trackerChartInstance.options.scales.y.max = 2500000;
+        } else {
+          delete trackerChartInstance.options.scales.y.max;
+        }
+      } else {
+        trackerChartInstance.options.scales.y.type = 'linear';
+        trackerChartInstance.options.scales.y.min = 0;
+        if (trackerYCapEnabled) {
+          trackerChartInstance.options.scales.y.max = 2500000;
+        } else if (trackerChartZoomRange === 'bridge' && !tracker10PctVisible) {
+          trackerChartInstance.options.scales.y.max = 1800000;
+        } else {
+          delete trackerChartInstance.options.scales.y.max;
+        }
+      }
+
+      // 3. 10% Dataset visibility
+      if (trackerChartInstance.data && trackerChartInstance.data.datasets && trackerChartInstance.data.datasets.length > 3) {
+        trackerChartInstance.data.datasets[3].hidden = !tracker10PctVisible;
+      }
+
+      updateTrackerZoomControlsUI();
+    }
+
+    function setTrackerZoom(range) {
+      trackerChartZoomRange = range;
+      applyTrackerActiveZoom();
+      if (trackerChartInstance) trackerChartInstance.update();
+    }
+
+    function zoomToMilestone(startAge, endAge) {
+      trackerChartZoomRange = 'custom';
+      trackerCustomMinAge = startAge;
+      trackerCustomMaxAge = endAge;
+      applyTrackerActiveZoom();
+      if (trackerChartInstance) trackerChartInstance.update();
+      updateTrackerZoomControlsUI(`Milestone Focus: Ages ${startAge}–${endAge}`);
+    }
+
+    function toggleTrackerYCap() {
+      trackerYCapEnabled = !trackerYCapEnabled;
+      applyTrackerActiveZoom();
+      if (trackerChartInstance) trackerChartInstance.update();
+    }
+
+    function toggleTracker10PctCurve() {
+      tracker10PctVisible = !tracker10PctVisible;
+      applyTrackerActiveZoom();
+      if (trackerChartInstance) trackerChartInstance.update();
+    }
+
+    function toggleTrackerLogScale() {
+      trackerLogScale = !trackerLogScale;
+      updatePensionTracker();
+    }
+
+    function resetTrackerZoom() {
+      trackerChartZoomRange = 'all';
+      trackerYCapEnabled = false;
+      tracker10PctVisible = true;
+      trackerLogScale = false;
+      trackerCustomMinAge = null;
+      trackerCustomMaxAge = null;
+      if (trackerChartInstance && typeof trackerChartInstance.resetZoom === 'function') {
+        try { trackerChartInstance.resetZoom(); } catch (e) {}
+      }
+      updatePensionTracker();
+    }
+
+    function updateTrackerZoomControlsUI(customStatus) {
+      const bAll = document.getElementById('btn-zoom-all');
+      const bBridge = document.getElementById('btn-zoom-bridge');
+      const bPost = document.getElementById('btn-zoom-post');
+      if (bAll) bAll.classList.toggle('active', trackerChartZoomRange === 'all');
+      if (bBridge) bBridge.classList.toggle('active', trackerChartZoomRange === 'bridge');
+      if (bPost) bPost.classList.toggle('active', trackerChartZoomRange === 'post67');
+
+      const bCap = document.getElementById('btn-zoom-cap');
+      if (bCap) {
+        bCap.classList.toggle('active', trackerYCapEnabled);
+        bCap.innerText = trackerYCapEnabled ? '✓ Core Focus (Cap £2.5M)' : 'Core Focus (Cap £2.5M)';
+      }
+      const b10 = document.getElementById('btn-toggle-10pct');
+      if (b10) {
+        b10.classList.toggle('active', tracker10PctVisible);
+        b10.innerText = tracker10PctVisible ? '👁️ 10% Curve' : '🚫 10% Curve Hidden';
+      }
+      const bLog = document.getElementById('btn-zoom-log');
+      if (bLog) {
+        bLog.classList.toggle('active', trackerLogScale);
+        bLog.innerText = trackerLogScale ? '✓ 📐 Log Scale' : '📐 Log Scale';
+      }
+
+      const statusEl = document.getElementById('tracker-zoom-status');
+      if (statusEl) {
+        if (customStatus) {
+          statusEl.innerText = customStatus;
+        } else if (trackerChartZoomRange === 'all') {
+          statusEl.innerText = trackerYCapEnabled ? 'Full Horizon (Ages 53–85, Y-Capped £2.5M)' : 'Full Horizon (Ages 53–85)';
+        } else if (trackerChartZoomRange === 'bridge') {
+          statusEl.innerText = '🔍 U-Dip Focus (Ages 53–70: 17-Yr Bridge)';
+        } else if (trackerChartZoomRange === 'post67') {
+          statusEl.innerText = 'Post-67 Era (Ages 67–85: Decumulation Longevity)';
+        } else if (trackerChartZoomRange === 'custom') {
+          statusEl.innerText = `Custom Range: Ages ${trackerCustomMinAge}–${trackerCustomMaxAge}`;
+        }
+      }
+    }
+
     function initTrackerChart() {
       const canvas = document.getElementById('trackerChart');
       if (!canvas) return;
@@ -4009,7 +4308,56 @@
             mode: 'index',
             intersect: false
           },
+          onClick: function(evt, elements) {
+            if (elements && elements.length > 0) {
+              const elementIndex = elements[0].index;
+              const rowAge = 53 + elementIndex;
+              const targetRow = document.getElementById('tr-row-age-' + rowAge);
+              if (targetRow) {
+                targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetRow.style.transition = 'background-color 0.4s ease';
+                targetRow.style.backgroundColor = 'rgba(59, 130, 246, 0.35)';
+                setTimeout(() => {
+                  targetRow.style.backgroundColor = '';
+                }, 2200);
+              }
+            }
+          },
           plugins: {
+            zoom: {
+              pan: {
+                enabled: true,
+                mode: 'x',
+                modifierKey: null
+              },
+              zoom: {
+                wheel: {
+                  enabled: true,
+                  speed: 0.05
+                },
+                pinch: {
+                  enabled: true
+                },
+                drag: {
+                  enabled: true,
+                  backgroundColor: 'rgba(59, 130, 246, 0.25)',
+                  borderColor: '#3b82f6',
+                  borderWidth: 1
+                },
+                mode: 'x',
+                onZoomComplete: function(ctx) {
+                  const chart = ctx.chart;
+                  const xMin = chart.scales.x.min;
+                  const xMax = chart.scales.x.max;
+                  const startAge = Math.round(53 + (typeof xMin === 'number' ? xMin : 0));
+                  const endAge = Math.round(53 + (typeof xMax === 'number' ? xMax : 32));
+                  trackerChartZoomRange = 'custom';
+                  trackerCustomMinAge = startAge;
+                  trackerCustomMaxAge = endAge;
+                  updateTrackerZoomControlsUI(`Box Zoom: Ages ${startAge}–${endAge}`);
+                }
+              }
+            },
             legend: {
               position: 'top',
               labels: { color: '#9ca3af', boxWidth: 12, font: { size: 11 } }
@@ -4063,6 +4411,7 @@
           }
         }
       });
+      applyTrackerActiveZoom();
     }
 
     function updatePensionTracker() {
@@ -4404,10 +4753,18 @@
       // Update Chart
       if (trackerChartInstance) {
         trackerChartInstance.data.labels = labels;
-        trackerChartInstance.data.datasets[0].data = data3;
-        trackerChartInstance.data.datasets[1].data = data5;
-        trackerChartInstance.data.datasets[2].data = data7;
-        trackerChartInstance.data.datasets[3].data = data10;
+        if (trackerLogScale) {
+          trackerChartInstance.data.datasets[0].data = data3.map(v => Math.max(1000, v));
+          trackerChartInstance.data.datasets[1].data = data5.map(v => Math.max(1000, v));
+          trackerChartInstance.data.datasets[2].data = data7.map(v => Math.max(1000, v));
+          trackerChartInstance.data.datasets[3].data = data10.map(v => Math.max(1000, v));
+        } else {
+          trackerChartInstance.data.datasets[0].data = data3;
+          trackerChartInstance.data.datasets[1].data = data5;
+          trackerChartInstance.data.datasets[2].data = data7;
+          trackerChartInstance.data.datasets[3].data = data10;
+        }
+        applyTrackerActiveZoom();
         trackerChartInstance.update();
       }
 
@@ -4478,6 +4835,7 @@
         }
 
         const tr = document.createElement('tr');
+        tr.id = 'tr-row-age-' + r.age;
         if (r.age === 57) tr.className = 'row-highlight-retire';
         else if (r.age === 67) tr.className = 'row-highlight-sp';
         else if (r.age === 68) tr.className = 'row-highlight-trough';
